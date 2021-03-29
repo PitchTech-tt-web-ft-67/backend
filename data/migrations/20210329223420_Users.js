@@ -5,6 +5,7 @@ exports.up = function(knex) {
         table.increments('user_id')
         table.string('first_name').notNullable()
         table.string('last_name').notNullable()
+        table.string('password').notNullable
         table
             .integer('role_id')
             .unsigned()
@@ -21,7 +22,7 @@ exports.up = function(knex) {
     .createTable('products', table => {
         table.increments('product_id')
         table.string('product_name').notNullable
-        table.string
+    
     })
 };
 
