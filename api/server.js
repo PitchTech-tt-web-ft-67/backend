@@ -12,7 +12,7 @@ server.use(cors())
 
 
 server.use(express.json())
-server.use('/users', userRouter)
-server.use('/products', restricted, productRouter)
+server.use('/api/users', userRouter)
+server.use('/api/products', restricted, productRouter)
 
 module.exports = server
