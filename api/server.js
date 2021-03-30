@@ -1,13 +1,18 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
+const userRouter = require('./users/users-router')
+const productRouter = require('./products/products-router')
+const restricted = require('./middleware/restricted')
 
 
 const server = express()
-const userRouter = require('./users/users-router')
-
-server.use(cors())
 server.use(helmet())
+server.use(cors())
+
 
 server.use(express.json())
-server.use('/api/users', userRouter)
+server.use('/users', userRouter)
+server.use('/products', restricted, productRouter)
+
+module.exports = server
