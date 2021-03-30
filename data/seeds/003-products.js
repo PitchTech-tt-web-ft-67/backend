@@ -5,7 +5,7 @@ exports.seed = function(knex) {
     .then(function () {
       // Inserts seed entries
       return knex('products').insert([
-        {product_id: 1, product_name: 'Macbook 2016'},
+        {product_id: 1, product_name: 'Macbook 15" 2016'},
 
       ]);
     });

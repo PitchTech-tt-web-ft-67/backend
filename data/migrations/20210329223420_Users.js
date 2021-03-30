@@ -5,7 +5,8 @@ exports.up = function(knex) {
         table.increments('user_id')
         table.string('first_name').notNullable()
         table.string('last_name').notNullable()
-        table.string('password').notNullable
+        table.string('email').notNullable().unique()
+        table.string('password').notNullable()
         table
             .integer('role_id')
             .unsigned()
@@ -14,14 +15,21 @@ exports.up = function(knex) {
             .inTable('roles')
             .onDelete('RESTRICT')
             .onUpdate('CASCADE')
+        table
+          .integer('product_id')
+          .unsigned()
+          .references('product_name')
+          .inTable('products')
+          .onDelete('RESTRICT')
+          .onUpdate('CASCADE')
     })
     .createTable('roles', table => {
         table.increments('role_id');
-        table.string("role_name").notNullable.unique()
+        table.string("role_name").notNullable().unique()
     })
     .createTable('products', table => {
         table.increments('product_id')
-        table.string('product_name').notNullable
+        table.string('product_name').notNullable()
     
     })
 };
