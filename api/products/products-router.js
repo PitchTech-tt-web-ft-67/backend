@@ -3,13 +3,17 @@ const router = express.Router()
 const Products = require('./products-model')
 
 router.get('/' , async ( req , res , next ) => {
-    console.log(product)
-    try {
-        const product = await Products.getProduct()
-        res.json(product)
-    } catch ( err ){
-        next(err)
-    }
+    
+    Products.getProduct()
+    .then (product => {
+        res.status(200).json(product)
+    })
+    // try {
+    //     const product = await Products.getProduct()
+    //     res.json(product)
+    // } catch ( err ){
+    //     next(err)
+    // }
 })
 
 

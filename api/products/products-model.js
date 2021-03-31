@@ -1,4 +1,4 @@
-
+const db = require('../../data/dbConfig')
 
 module.exports = {
     addProduct,
@@ -13,7 +13,7 @@ async function addProduct(product) {
     return { data: a , message:  `${a.product} added!`}
 }
 
-function getProduct(id) {
+function getProduct() {
     return db('products').select('product_id','product_name');
 }
 
