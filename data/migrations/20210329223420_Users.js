@@ -8,20 +8,13 @@ exports.up = function(knex) {
         table.string('email').notNullable().unique()
         table.string('password').notNullable()
         table
-            .integer('role_id')
+            .integer('role')
             .unsigned()
             .notNullable()
-            .references('role_name')
+            .references('role_id')
             .inTable('roles')
             .onDelete('RESTRICT')
             .onUpdate('CASCADE')
-        table
-          .integer('product_id')
-          .unsigned()
-          .references('product_name')
-          .inTable('products')
-          .onDelete('RESTRICT')
-          .onUpdate('CASCADE')
     })
     .createTable('roles', table => {
         table.increments('role_id');
@@ -29,7 +22,7 @@ exports.up = function(knex) {
     })
     .createTable('products', table => {
         table.increments('product_id')
-        table.string('product_name').notNullable()
+        table.string('product_name').notNullable().unique()
     
     })
 };

@@ -17,7 +17,7 @@ router.get('/' , async ( req , res , next ) => {
 router.get('/:id', ( req , res ) => {
     const { id } = req.params
 
-    Products.findBy(id)
+    Products.findById(id)
     .then( item => {
         if(item){
             res.status(200).json(item)
@@ -47,7 +47,7 @@ router.put('/:id', ( req , res ) => {
 
     Products.updateProduct( id, changes)
     .then( product => {
-        if(req.body.name){
+        if(req.body){
             res.status(200).json(product)
         } else {
             res.status(400).json({message:'Requires Name'})

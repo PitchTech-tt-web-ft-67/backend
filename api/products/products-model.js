@@ -5,12 +5,12 @@ module.exports = {
     getProduct,
     removeProduct,
     updateProduct,
-    findBy   
+    findById   
 }
 
-async function addProduct(product) {
-    const a = await db('products').insert(product);
-    return { data: a , message:  `${a.product} added!`}
+function addProduct(product) {
+   
+    return db('products as p').insert(product).into("products")
 }
 
 function getProduct() {
@@ -21,11 +21,10 @@ function removeProduct(id) {
     return db('products').where('product_id', id).delete();
 }
 
-async function updateProduct(id, product) {
-    await db('products').where('product_id', id).update(product);
-    return db('products').where('product_id', id).first();
+function updateProduct(id, product) {
+    return db('products as p').where('p.product_name', id).update(product);
 }
 
-function findBy(filter) {
-    return db('products as p').select('p.product_id' ,'p.product_name').where(filter);
+function findById(id) {
+    return db('products as p').where("p.product_id", id).first()
 }
