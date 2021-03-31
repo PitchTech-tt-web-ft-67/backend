@@ -13,7 +13,7 @@ server.use(cors())
 
 server.use(express.json())
 server.use('/api/users', userRouter)
-server.use('/api/products', restricted, productRouter)
+server.use('/api/products', productRouter)
 
 
 

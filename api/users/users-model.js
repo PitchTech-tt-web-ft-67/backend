@@ -8,7 +8,7 @@ const db = require("../../data/dbConfig");
 
   async function addUser(user) {
       const a = await db("users").insert(user);
-      return { data: a , message: `${a.first_name} created!`}
+      return { data: user , message: `${user.first_name} created!`}
   }
 
 

@@ -23,7 +23,7 @@ router.get('/:id', ( req , res ) => {
             res.status(200).json(item)
 
         } else {
-            res.status(400).json({error: err.message})
+            res.status(400).json({error: error.message})
         }
     })
     .catch(err => {
@@ -32,7 +32,8 @@ router.get('/:id', ( req , res ) => {
 })
 
 router.post('/', ( req , res ) => {
-    Products.addProduct(req.body)
+    const { product_name } = req.body
+    Products.addProduct({product_name})
     .then(product => {
         res.status(201).json(product)
     })
