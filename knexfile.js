@@ -26,9 +26,13 @@ module.exports = {
 
  production: {
    ...sharedConfig,
-  
- }
+   connection: process.env.DATABASE_URL || {
+
+    user: "username",
+    password: "password",
+    }
+  }
 
 
 
-};
+}

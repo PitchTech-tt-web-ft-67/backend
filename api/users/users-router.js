@@ -9,7 +9,7 @@ const makeToken = require('../middleware/restricted')
 router.post('/register' , async( req , res , next ) => {
     try {
         const { firstName, lastName, password, email, role } = req.body
-        const user = await Users.findBy({email}).first()
+        const user = await Users.findById({email}).first()
 
         if(user){
             return res.status(409).json({message:'Email taken.'})
@@ -32,7 +32,7 @@ router.post('/register' , async( req , res , next ) => {
     }
 })
 
-router.post('/login'), loginValidation, ( req , res ) => {
+router.post('/login', loginValidation, ( req , res ) => {
     Users.getUser(req.body.email)
     .then((user) => {
         if(bcryptjs.compareSync(req.body.password, user[0].password)){
@@ -46,6 +46,25 @@ router.post('/login'), loginValidation, ( req , res ) => {
             res.status(401).json({ message: 'Invalid credentials.'})
         }
     })
-}
+})
+
+
+router.get('/:id', ( req , res ) => {
+    const { id } = req.params
+
+    Users.findById(id)
+    .then( user => {
+        if(user){
+            res.status(200).json(user)
+        } else {
+            res.status(400).json({error:err.message})
+        }
+    })
+    .catch( err => {
+        res.status(404).json({ error: err.message})
+    })
+})
+
+
 
 module.exports = router;
