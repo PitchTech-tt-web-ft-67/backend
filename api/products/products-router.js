@@ -4,16 +4,13 @@ const Products = require('./products-model')
 
 router.get('/' , async ( req , res , next ) => {
     
-    Products.getProduct()
-    .then (product => {
+   
+    try {
+        const product = await Products.getProduct()
         res.status(200).json(product)
-    })
-    // try {
-    //     const product = await Products.getProduct()
-    //     res.json(product)
-    // } catch ( err ){
-    //     next(err)
-    // }
+    } catch ( err ){
+        next(err)
+    }
 })
 
 
@@ -34,7 +31,7 @@ router.get('/:id', ( req , res ) => {
     })
 })
 
-router.post('/', async ( req , res ) => {
+router.post('/', ( req , res ) => {
     Products.addProduct(req.body)
     .then(product => {
         res.status(201).json(product)

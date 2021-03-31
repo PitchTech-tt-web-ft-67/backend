@@ -21,7 +21,7 @@ function removeProduct(id) {
     return db('products').where('product_id', id).delete();
 }
 
-await function updateProduct(id, product) {
+async function updateProduct(id, product) {
     await db('products').where('product_id', id).update(product);
     return db('products').where('product_id', id).first();
 }
