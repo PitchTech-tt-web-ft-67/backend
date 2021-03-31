@@ -13,7 +13,7 @@ const db = require("../../data/dbConfig");
 
 
   function getUser(name) {
-      return db('users').where('first_name', name);
+      return db('users').where('email', name);
   }
 
   function findById(id) {

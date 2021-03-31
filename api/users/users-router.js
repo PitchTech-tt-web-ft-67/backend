@@ -3,6 +3,7 @@ const router = express.Router();
 const Users = require('./users-model')
 const bcryptjs = require('bcryptjs');
 const makeToken = require('../middleware/makeToken');
+const loginValidation = require('../middleware/loginValidation')
 
 
 
@@ -34,63 +35,67 @@ router.post('/register' , async( req , res , next ) => {
     }
 })
 
-// router.post('/login', loginValidation, ( req , res ) => {
-//     Users.getUser(req.body.email)
-//     .then((user) => {
-//         if(bcryptjs.compareSync(req.body.password, user[0].password)){
-//             const token = makeToken(user[0]);
-//             res.status(200).json({
-//                 message:"Here's a Pitch",
-//                 data:user,
-//                 token
-//             });
-//         } else {
-//             res.status(401).json({ message: 'Need Email and Password.'})
-//         }
-//     })
-// })
-router.post('/login', async (req, res, next) => {
+router.post('/login', ( req , res ) => {
+    console.log(req.body.password)
     
-    try{
-      const {email, password} = req.body
+    Users.getUser(req.body.email)
+    .then((user) => {
+        console.log(user[0].password)
+        
+        if( req.body.password === user[0].password){
+            const token = makeToken(user[0]);
+            res.status(200).json({
+                message:"Here's a Pitch",
+                data:user,
+                token
+            });
+        } else {
+            res.status(401).json({ message: 'Need Email and Password.'})
+        }
+    })
+})
+// router.post('/login', async (req, res, next) => {
+    
+//     try{
+//       const {email, password} = req.body
   
-      if(!email || !password){
-        return res.status(401).json({message: 'email and password required'})
-      }
-    //   const user = await Users.findById({email}).first()
+//       if(!email || !password){
+//         return res.status(401).json({message: 'email and password required'})
+//       }
+//     //   const user = await Users.findById({email}).first()
   
-    //   const passwordValid = await bcryptjs.compareSync(password, user.password)
+//     //   const passwordValid = await bcryptjs.compareSync(password, user.password)
   
-    //   if(!user || !passwordValid){
-    //     return res.status(401).json({message: 'invalid credentials'})
-    //   }
+//     //   if(!user || !passwordValid){
+//     //     return res.status(401).json({message: 'invalid credentials'})
+//     //   }
 
-    // const passwordValid = await bcryptjs.compareSync(password, user.password)
+//     // const passwordValid = await bcryptjs.compareSync(password, user.password)
 
-    Users.findById({email})
-        .first()
-        .then( user => {
-          if( user && bcryptjs.compareSync(password, user.password)){
-            const token = makeToken(user)
+//     Users.findById({id})
+//         .first()
+//         .then( user => {
+//           if( bcryptjs.compareSync(req.body.password , user[0].password)){
+//             const token = makeToken(user[0])
   
-            res.json({
-              message: `welcome, ${user.first_name}`,
-              token:token
-            })
-          } else {
-              res.status(401).json({message:"Invalid Credentials"})
-          }
-      })
+//             res.json({
+//               message: `welcome, ${user.first_name}`,
+//               token:token
+//             })
+//           } else {
+//               res.status(401).json({message:"Invalid Credentials"})
+//           }
+//       })
 
 
 
 
 
       
-    } catch(err){
-      next(err)
-    }
-})
+//     } catch(err){
+//       next(err)
+//     }
+// })
 
 router.get('/:id', ( req , res ) => {
     const { id } = req.params
