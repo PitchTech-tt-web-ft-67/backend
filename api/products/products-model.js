@@ -22,9 +22,9 @@ function removeProduct(id) {
 }
 
 function updateProduct(id, product) {
-    return db('products as p').where('p.product_name', id).update(product);
+    return db('products').where('product_id', id).update(product);
 }
 
 function findById(id) {
-    return db('products as p').where("p.product_id", id).first()
+    return db('products').where("product_id", id).first()
 }

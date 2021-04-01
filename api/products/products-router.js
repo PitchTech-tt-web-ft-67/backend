@@ -48,7 +48,8 @@ router.put('/:id', ( req , res ) => {
 
     Products.updateProduct( id, changes)
     .then( product => {
-        if(req.body){
+        
+        if(changes.product_name){
             res.status(200).json(product)
         } else {
             res.status(400).json({message:'Requires Name'})

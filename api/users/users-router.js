@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Users = require('./users-model')
-const bcryptjs = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const makeToken = require('../middleware/makeToken');
-const loginValidation = require('../middleware/loginValidation')
+
 
 
 
@@ -19,12 +19,12 @@ router.post('/register' , async( req , res , next ) => {
         if(!first_name || !last_name || !password || !email || !role){
             return res.status(409).json({message:'Field inputs are requried.'})
         }
-
+        const hash = bcrypt.hashSync(req.body.password, 10)
         const newUser = await Users.addUser({
             
             first_name,
             last_name,
-            password: await bcryptjs.hash(password,  10),
+            password: hash,
             email,
             role,
         })
@@ -35,67 +35,50 @@ router.post('/register' , async( req , res , next ) => {
     }
 })
 
-router.post('/login', ( req , res ) => {
-    console.log(req.body.password)
+// router.post('/login', ( req , res ) => {
     
-    Users.getUser(req.body.email)
-    .then((user) => {
-        console.log(user[0].password)
+    
+//     Users.getUser(req.body.email)
+//     .then((user) => {
         
-        if( req.body.password === user[0].password){
-            const token = makeToken(user[0]);
+        
+//         if( req.body.password === user[0].password){
+//             const token = makeToken(user[0]);
+//             res.status(200).json({
+//                 message:"Here's a Pitch",
+//                 data:user,
+//                 token
+//             });
+//         } else {
+//             res.status(401).json({ message: 'Need Email and Password.'})
+//         }
+//     })
+// })
+
+router.post('/login', async ( req , res , next ) => {
+    const credentials = req.body;
+
+    await Users.getUser(credentials.email)
+    .then( user => {
+        console.log("here")
+        if( user && bcrypt.compare(credentials.password, user.password)){
+            const token = makeToken(user)
             res.status(200).json({
-                message:"Here's a Pitch",
-                data:user,
+                data: user,
+                message: "Here's a Pitch.",
                 token
-            });
+            })
+            next()
         } else {
-            res.status(401).json({ message: 'Need Email and Password.'})
+            res.status(401).json({ message: 'Need Email and Password'})
         }
     })
+    .catch( err => {
+        res.status(500).json({message: err.message})
+    })
+
 })
-// router.post('/login', async (req, res, next) => {
-    
-//     try{
-//       const {email, password} = req.body
-  
-//       if(!email || !password){
-//         return res.status(401).json({message: 'email and password required'})
-//       }
-//     //   const user = await Users.findById({email}).first()
-  
-//     //   const passwordValid = await bcryptjs.compareSync(password, user.password)
-  
-//     //   if(!user || !passwordValid){
-//     //     return res.status(401).json({message: 'invalid credentials'})
-//     //   }
 
-//     // const passwordValid = await bcryptjs.compareSync(password, user.password)
-
-//     Users.findById({id})
-//         .first()
-//         .then( user => {
-//           if( bcryptjs.compareSync(req.body.password , user[0].password)){
-//             const token = makeToken(user[0])
-  
-//             res.json({
-//               message: `welcome, ${user.first_name}`,
-//               token:token
-//             })
-//           } else {
-//               res.status(401).json({message:"Invalid Credentials"})
-//           }
-//       })
-
-
-
-
-
-      
-//     } catch(err){
-//       next(err)
-//     }
-// })
 
 router.get('/:id', ( req , res ) => {
     const { id } = req.params
