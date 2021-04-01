@@ -31,49 +31,7 @@ router.get('/:id', ( req , res ) => {
     })
 })
 
-router.post('/', ( req , res ) => {
-    const { product_name } = req.body
-    Products.addProduct({product_name})
-    .then(product => {
-        res.status(201).json(product)
-    })
-    .catch(err => {
-        res.status(500).json({error: err.message})
-    })
-})
 
-router.put('/:id', ( req , res ) => {
-    const { id } = req.params
-    const changes = req.body
 
-    Products.updateProduct( id, changes)
-    .then( product => {
-        
-        if(changes.product_name){
-            res.status(200).json(product)
-        } else {
-            res.status(400).json({message:'Requires Name'})
-        }
-    })
-    .catch( err => {
-        res.status(400).json({error: err.message})
-    })
-})
-
-router.delete('/:id' , ( req , res ) => {
-    const { id } = req.params
-
-    Products.removeProduct(id)
-    .then( product => {
-        if(product){
-            res.status(200).json({message:'Product deleted.'})
-        } else {
-            res.status(404).json({message: "Need Identification."})
-        }
-    })
-    .catch( err => {
-        res.status(500).json({ message: 'Product unable to delete.'})
-    })
-})
 
 module.exports = router;
