@@ -3,6 +3,7 @@ const router = express.Router();
 const Users = require('./users-model')
 const bcrypt = require('bcryptjs');
 const makeToken = require('../middleware/makeToken');
+const restricted = require('../middleware/restricted')
 require('dotenv').config();
 
 
@@ -19,7 +20,7 @@ router.post('/register' , async( req , res , next ) => {
         if(!first_name || !last_name || !password || !email || !role){
             return res.status(409).json({message:'Field inputs are requried.'})
         }
-        const hash = bcrypt.hashSync(req.body.password, 10)
+        const hash = await bcrypt.hashSync(req.body.password, 10)
         const newUser = await Users.addUser({
             
             first_name,
@@ -55,8 +56,8 @@ router.post('/register' , async( req , res , next ) => {
 //     })
 // })
 
-router.post('/login', async ( req , res , next ) => {
-    const credentials = req.body;
+router.post('/login', async( req , res , next ) => {
+    const credentials = await req.body;
 
     await Users.getUser(credentials.email)
     .then( user => {
@@ -97,7 +98,7 @@ router.get('/:id', ( req , res ) => {
 })
 
 
-router.get('/:id/products', ( req , res ) => {
+router.get('/:id/products', restricted, ( req , res ) => {
     console.log(req.params)
     Users.getProducts(req.params.id)
     .then((data) => {
@@ -108,7 +109,7 @@ router.get('/:id/products', ( req , res ) => {
     })
 })
 
-router.delete('/:id/products/:product_id' , ( req , res ) => {
+router.delete('/:id/products/:product_id' , restricted, ( req , res ) => {
     const { id } = req.params
 
     Users.removeProduct(id)
@@ -124,7 +125,7 @@ router.delete('/:id/products/:product_id' , ( req , res ) => {
     })
 })
 
-router.put('/:id/products/:product_id', ( req , res ) => {
+router.put('/:id/products/:product_id', restricted, ( req , res ) => {
 
     const changes = req.body
     console.log(req.body)
@@ -143,7 +144,7 @@ router.put('/:id/products/:product_id', ( req , res ) => {
     })
 })
 
-router.post('/:id/products', ( req , res ) => {
+router.post('/:id/products', restricted,( req , res ) => {
     const { product_name } = req.body
     Users.addProduct({product_name})
     .then(product => {

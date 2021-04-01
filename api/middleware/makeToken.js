@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { jwtSecret } = require('../../config/secret')
+const secrets = require('../../config/secret')
 
 module.exports = function makeToken(user){
     const payload = {
@@ -9,8 +9,8 @@ module.exports = function makeToken(user){
 
 
     const options = {
-        expiresIn : "7777777s"
+        expiresIn : "2 weeks"
     }
 
-    return jwt.sign(payload, jwtSecret, options)
+    return jwt.sign(payload, secrets.jwtSecret, options)
 }

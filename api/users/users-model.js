@@ -24,7 +24,7 @@ const db = require("../../data/dbConfig");
       return db('users').where('user_id', id);
   }
 
-async function getProducts(id){
+function getProducts(id){
     return db('products').where('product_name', id);
 }
 
