@@ -60,7 +60,7 @@ router.post('/login', async ( req , res , next ) => {
 
     await Users.getUser(credentials.email)
     .then( user => {
-        console.log("here")
+       
         if( user && bcrypt.compare(credentials.password, user.password)){
             const token = makeToken(user)
             res.status(200).json({
