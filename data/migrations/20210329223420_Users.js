@@ -23,7 +23,14 @@ exports.up = function(knex) {
     .createTable('products', table => {
         table.increments('product_id')
         table.string('product_name').notNullable().unique()
-    
+        table
+          .integer("user")
+          .unsigned()
+          .notNullable()
+          .references('user_id')
+          .inTable('users')
+          .onUpdate('CASCADE')
+
     })
 };
 

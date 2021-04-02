@@ -62,7 +62,7 @@ router.post('/login', async( req , res , next ) => {
     await Users.getUser(credentials.email)
     .then( user => {
        
-        if( user && bcrypt.compare(credentials.password, user.password)){
+        if( user && bcrypt.compareSync(credentials.password, user.password)){
             const token = makeToken(user)
             res.status(200).json({
                 data: user,
@@ -89,71 +89,19 @@ router.get('/:id', ( req , res ) => {
         if(user){
             res.status(200).json(user)
         } else {
-            res.status(400).json({error:err.message})
+            res.status(400).json({error2:err.message})
         }
     })
     .catch( err => {
-        res.status(404).json({ error: err.message})
+        res.status(404).json({ error1: err.message})
     })
 })
 
 
-router.get('/:id/products', restricted, ( req , res ) => {
-    console.log(req.params)
-    Users.getProducts(req.params.id)
-    .then((data) => {
-        res.status(200).json(data)
-    })
-    .catch((err) => {
-        res.status(400).json({message: 'Could not grab'})
-    })
-})
 
-router.delete('/:id/products/:product_id' , restricted, ( req , res ) => {
-    const { id } = req.params
 
-    Users.removeProduct(id)
-    .then( product => {
-        if(product){
-            res.status(200).json({message:'Product deleted.'})
-        } else {
-            res.status(404).json({message: "Need Identification."})
-        }
-    })
-    .catch( err => {
-        res.status(500).json({ message: 'Product unable to delete.'})
-    })
-})
 
-router.put('/:id/products/:product_id', restricted, ( req , res ) => {
 
-    const changes = req.body
-    console.log(req.body)
-
-    Users.updateProduct( req.params.product_id, changes)
-    .then( product => {
-        
-        if(changes.product_name){
-            res.status(200).json(product)
-        } else {
-            res.status(400).json({message:'Requires Name'})
-        }
-    })
-    .catch( err => {
-        res.status(400).json({error: err.message})
-    })
-})
-
-router.post('/:id/products', restricted,( req , res ) => {
-    const { product_name } = req.body
-    Users.addProduct({product_name})
-    .then(product => {
-        res.status(201).json(product)
-    })
-    .catch(err => {
-        res.status(500).json({error: err.message})
-    })
-})
 
 
 
